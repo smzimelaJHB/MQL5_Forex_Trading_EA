@@ -56,7 +56,6 @@ int  Devident = (int)(posit / min);
 
 int BHandle;  // handle for our BB indicator
 int BHandle2;  // handle for our BB indicator
-int BHandle3;  // handle for our BB indicator
 int MaHandle;//Moving avarage handle
 int MaHandle2;//Moving avarage handle
 int Stock;//stochaitic handle
@@ -67,7 +66,7 @@ double mva2[];//array for moving avarage
 
 // dynamic arrays for numerical values of Bollinger Bands
 double BBUp[], BBLow[], BBMidle[], BBUp2[], BBLow2[];
-double BBMidle2[], BBUp3[], BBLow3[], BBMidle3[];
+double BBMidle2[];
 
 
 
@@ -77,15 +76,14 @@ double BBMidle2[], BBUp3[], BBLow3[], BBMidle3[];
 int OnInit()
   {
 //--- Initialises and gets values of indicators
-   BHandle = iBands(_Symbol, PERIOD_H1, 20, 0, 1, PRICE_CLOSE);
-   BHandle2 = iBands(_Symbol, PERIOD_H1, 20, 0, 2, PRICE_CLOSE);
-   BHandle3 = iBands(_Symbol, PERIOD_H1, 50, 0, 2.5, PRICE_CLOSE);
-   MaHandle = iMA(_Symbol, _Period, 200, 0, MODE_SMMA, PRICE_MEDIAN);
+   BHandle = iBands(_Symbol, _Period, 20, 0, 1, PRICE_CLOSE);
+   BHandle2 = iBands(_Symbol, _Period, 20, 0, 2, PRICE_CLOSE);
+   MaHandle = iMA(_Symbol, _Period, 200,0, MODE_SMMA, PRICE_MEDIAN);
    MaHandle2 = iMA(_Symbol, PERIOD_M15, 34, 21, MODE_SMMA, PRICE_MEDIAN);
-   Stock = iStochastic(_Symbol, PERIOD_H1, 100, 3, 3, MODE_SMA, 0);
+   Stock = iStochastic(_Symbol, _Period, 100, 3, 3, MODE_SMA, 0);
 
 //---if handle returns Invalid RESULTS
-   if(BHandle < 0 || BHandle2 < 0 || BHandle3 < 0 || MaHandle < 0 || MaHandle2 
+   if(BHandle < 0 || BHandle2 < 0|| MaHandle < 0 || MaHandle2 
         < 0 || Stock < 0)
      {
       printf("Error Creating Handles for indicators - error: ", GetLastError(), "!!");
@@ -109,7 +107,6 @@ void OnDeinit(const int reason)
 //---
    IndicatorRelease(BHandle);
    IndicatorRelease(BHandle2);
-   IndicatorRelease(BHandle3);
    IndicatorRelease(MaHandle);
    IndicatorRelease(MaHandle2);
    IndicatorRelease(Stock);
@@ -176,9 +173,6 @@ void OpenT()
       ArraySetAsSeries(BBUp2, true);
       ArraySetAsSeries(BBLow2, true);
       ArraySetAsSeries(BBMidle2, true);
-      ArraySetAsSeries(BBUp3, true);
-      ArraySetAsSeries(BBLow3, true);
-      ArraySetAsSeries(BBMidle3, true);
       ArraySetAsSeries(mrate, true);
       ArraySetAsSeries(stock1, true);
       if(CopyRates(_Symbol, _Period, 0, 4, mrate) != 4)
@@ -187,10 +181,7 @@ void OpenT()
          return;
         }
       //--- Copy the new values of our indicators to buffers (arrays) using the handle
-      if(CopyBuffer(BHandle3, 0, 0, 4, BBMidle3) < 0
-         || CopyBuffer(BHandle3, 1, 0, 4, BBUp3) < 0
-         || CopyBuffer(BHandle3, 2, 0, 4, BBLow3) < 0
-         || CopyBuffer(BHandle, 0, 0, 4, BBMidle) < 0
+      if(CopyBuffer(BHandle, 0, 0, 4, BBMidle) < 0
          || CopyBuffer(BHandle, 1, 0, 4, BBUp) < 0
          || CopyBuffer(BHandle, 2, 0, 4, BBLow) < 0
          || CopyBuffer(BHandle2, 0, 0, 4, BBMidle2) < 0
