@@ -11,4 +11,4 @@
 
 ### Testing:
 * ctrl+R to backtest
-* select EA, timeframe = 1HR and use realticks
+* select EA, timeframe and use realticks
